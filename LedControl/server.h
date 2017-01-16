@@ -4,8 +4,8 @@
 
 //code to starts up the server on the ESP8266, listening on UDP port localPort
 
-const char* ssid     = "The House of Benjamin";
-const char* password = "bellasatonthemat";
+const char* ssid     = "************";
+const char* password = "***********";
 
 unsigned int localPort = 10000;      // local port to listen for UDP packets
 unsigned int outPort = 9999;
