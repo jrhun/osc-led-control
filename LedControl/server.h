@@ -75,15 +75,15 @@ void routeHSL(OSCMessage &msg, int addrOffset) {
   Serial.print(msg.getFloat(0));
   Serial.println();
 
- if (msg.match("/lightness", addrOffset))
+ if (msg.fullMatch("/lightness", addrOffset))
  {
   currentColor.L = msg.getFloat(0);
  } 
- else if (msg.match("/hue", addrOffset)) 
+ else if (msg.fullMatch("/hue", addrOffset)) 
  {
   currentColor.H = msg.getFloat(0);
  }
- else if (msg.match("/saturation", addrOffset))
+ else if (msg.fullMatch("/saturation", addrOffset))
  {
   currentColor.S = msg.getFloat(0);
  }
