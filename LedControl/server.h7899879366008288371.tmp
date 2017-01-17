@@ -7,7 +7,6 @@
 
 #include <OSCBoards.h>
 #include <OSCBundle.h>
-#include <OSCMessage.h>
 
 #include "led.h"
 
@@ -49,19 +48,19 @@ void setupWiFi() {
 }
 
 void loopWiFi() {
-   OSCMessage msgIN;
+   OSCBundle bundleIN;
    int size;
  
    if( (size = udp.parsePacket())>0)
    {
      while(size--)
-       //Serial.print("Received Message: ");
-       msgIN.fill(udp.read());
+       Serial.print("Received Message: ");
+       bundleIN.fill(udp.read());
 
-      if(!msgIN.hasError())
-        //Serial.print("valid OSC!");
-        Serial.println();
-        msgIN.route("/HSV", routeHSL);
+      if(!bundleIN.hasError())
+        Serial.print("valid OSC!");
+        Serial.println;
+        bundleIN.route("/HSV", routeHSL);
    }
 }
 
@@ -72,10 +71,11 @@ void routeHSL(OSCMessage &msg, int addrOffset) {
   HslColor currentColor = HslColor(firstPixelColor);
   // currentColor contains the floats H, S, L
   Serial.print("Msg is :");
-  Serial.print(msg.getFloat(0));
-  Serial.println();
+  Serial.print(msg.getFloat);
+  Serial.println;
 
- if (msg.match("/lightness", addrOffset))
+  
+ if (msg.match("/value", addrOffset))  //TODO: change to lightness in TouchOSC Editor
  {
   currentColor.L = msg.getFloat(0);
  } 
