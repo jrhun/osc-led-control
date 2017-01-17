@@ -1,14 +1,11 @@
-#include "leds.h"
 #include "server.h"
 
 void setup() {
   // put your setup code here, to run once:
-  setupWIFI();
-  setupLights();
+  setupWiFi();
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  loopLights();
-  loopServer();
+  loopWiFi();
 }
