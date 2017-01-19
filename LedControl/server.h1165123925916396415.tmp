@@ -23,8 +23,6 @@ void routeHSL(OSCMessage &msg, int addrOffset);
 void routeColor(OSCMessage &msg, int addrOffset);
 void updateRgbSlider(HslColor color);
 void sendOSC(OSCMessage &msgOUT);
-extern bool animationOn;
-extern uint8_t gCurrentAnimationNumber;
 
 int resolution = 4; //default resolution for encoders
 
@@ -73,21 +71,6 @@ void loopWiFi() {
         msgIN.route("/HSV", routeHSL);
         msgIN.route("/colour", routeColor);
 //        Serial.print("hmmm");
-        if (msgIN.fullMatch("/fx1"))
-        {
-          animationOn = true; 
-          gCurrentAnimationNumber = 0;
-        }
-        if (msgIN.fullMatch("/fx2"))
-        {
-          animationOn = true; 
-          gCurrentAnimationNumber = 1;
-        }
-        if (msgIN.fullMatch("/fx4"))
-        {
-          animationOn = false; 
-        }
-        
         if (msgIN.fullMatch("/resolution")) 
         {
           int resolution = int(msgIN.getFloat(0)*49.0) + 1;    // resolution from 1-50
@@ -109,10 +92,8 @@ void routeHSL(OSCMessage &msg, int addrOffset)
    if (msg.fullMatch("/lightness", addrOffset))
    {
       currentColor.L = msg.getFloat(0);
-      //update labels
-      OSCMessage msgOUT("/labels/lightness");
-      msgOUT.add(currentColor.L * 512.0); 
-      sendOSC(msgOUT);
+//      Serial.print("Msg is :");
+//      Serial.print(msg.getFloat(0));
    } 
    else if (msg.fullMatch("/hue", addrOffset)) 
    {
@@ -123,19 +104,18 @@ void routeHSL(OSCMessage &msg, int addrOffset)
       if (hue < 0) {hue = 1000 + hue;}
       currentColor.H = float(hue) / 1000;
       
-      //update labels - to be moved to centralised section
-      OSCMessage msgOUT("/labels/hue");
-      msgOUT.add(currentColor.H * 255.0); 
-      sendOSC(msgOUT);
       
+//      currentColor.H = msg.getFloat(0);
+      Serial.print("hue is :");
+//      Serial.print(msg.getFloat(0));
+      Serial.print(hue);
+      Serial.println();
    }
    else if (msg.fullMatch("/saturation", addrOffset))
    {
       currentColor.S = msg.getFloat(0);
-      
-      OSCMessage msgOUT("/labels/saturation");
-      msgOUT.add(currentColor.S * 255.0); 
-      sendOSC(msgOUT);
+//      Serial.print("Msg is :");
+//      Serial.print(msg.getFloat(0));
    }
    setHSL(currentColor);
    updateRgbSlider(currentColor);
@@ -147,10 +127,10 @@ void routeColor(OSCMessage &msg, int addrOffset)
     if (msg.fullMatch("/red", addrOffset))    { strip.ClearTo(RgbColor(255,0,0));}
     if (msg.fullMatch("/blue", addrOffset))   { strip.ClearTo(RgbColor(0,0,255));}
     if (msg.fullMatch("/green", addrOffset))  { strip.ClearTo(RgbColor(0,255,0));}
-    if (msg.fullMatch("/pink", addrOffset))   { strip.ClearTo(RgbColor(244,66,228));}
-    if (msg.fullMatch("/orange", addrOffset)) { strip.ClearTo(RgbColor(244,137,66));}
-    if (msg.fullMatch("/purple", addrOffset)) { strip.ClearTo(RgbColor(128,66,244));}
-    if (msg.fullMatch("/white", addrOffset))  { strip.ClearTo(RgbColor(128,128,128));}
+    if (msg.fullMatch("/pink", addrOffset))   { strip.ClearTo(RgbColor(122,33,114));}
+    if (msg.fullMatch("/orange", addrOffset)) { strip.ClearTo(RgbColor(122,68,33));}
+    if (msg.fullMatch("/purple", addrOffset)) { strip.ClearTo(RgbColor(64,33,122));}
+
 }
 
 void updateRgbSlider(HslColor color) 

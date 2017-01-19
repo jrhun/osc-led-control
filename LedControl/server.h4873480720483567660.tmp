@@ -23,8 +23,6 @@ void routeHSL(OSCMessage &msg, int addrOffset);
 void routeColor(OSCMessage &msg, int addrOffset);
 void updateRgbSlider(HslColor color);
 void sendOSC(OSCMessage &msgOUT);
-extern bool animationOn;
-extern uint8_t gCurrentAnimationNumber;
 
 int resolution = 4; //default resolution for encoders
 
@@ -73,21 +71,6 @@ void loopWiFi() {
         msgIN.route("/HSV", routeHSL);
         msgIN.route("/colour", routeColor);
 //        Serial.print("hmmm");
-        if (msgIN.fullMatch("/fx1"))
-        {
-          animationOn = true; 
-          gCurrentAnimationNumber = 0;
-        }
-        if (msgIN.fullMatch("/fx2"))
-        {
-          animationOn = true; 
-          gCurrentAnimationNumber = 1;
-        }
-        if (msgIN.fullMatch("/fx4"))
-        {
-          animationOn = false; 
-        }
-        
         if (msgIN.fullMatch("/resolution")) 
         {
           int resolution = int(msgIN.getFloat(0)*49.0) + 1;    // resolution from 1-50
@@ -109,7 +92,6 @@ void routeHSL(OSCMessage &msg, int addrOffset)
    if (msg.fullMatch("/lightness", addrOffset))
    {
       currentColor.L = msg.getFloat(0);
-      //update labels
       OSCMessage msgOUT("/labels/lightness");
       msgOUT.add(currentColor.L * 512.0); 
       sendOSC(msgOUT);
@@ -123,19 +105,18 @@ void routeHSL(OSCMessage &msg, int addrOffset)
       if (hue < 0) {hue = 1000 + hue;}
       currentColor.H = float(hue) / 1000;
       
-      //update labels - to be moved to centralised section
-      OSCMessage msgOUT("/labels/hue");
-      msgOUT.add(currentColor.H * 255.0); 
-      sendOSC(msgOUT);
       
+//      currentColor.H = msg.getFloat(0);
+      Serial.print("hue is :");
+//      Serial.print(msg.getFloat(0));
+      Serial.print(hue);
+      Serial.println();
    }
    else if (msg.fullMatch("/saturation", addrOffset))
    {
       currentColor.S = msg.getFloat(0);
-      
-      OSCMessage msgOUT("/labels/saturation");
-      msgOUT.add(currentColor.S * 255.0); 
-      sendOSC(msgOUT);
+//      Serial.print("Msg is :");
+//      Serial.print(msg.getFloat(0));
    }
    setHSL(currentColor);
    updateRgbSlider(currentColor);
