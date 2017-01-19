@@ -11,12 +11,11 @@
 
 #include "led.h"
 
-const char* ssid     = "*************";
-const char* password = "************";
-
-unsigned int localPort = 10000;      // local port to listen for UDP packets
+const char* ssid     = "The House of Benjamin";
+const char* password = "bellasatonthemat";
+unsigned int localPort = 10000;   
 unsigned int outPort = 12000;
-IPAddress outIP(192, 168, 0, 100);  //TouchOSC IP for visual feedback
+IPAddress outIP(192, 168, 0, 100);   
 
 WiFiUDP udp;
 
@@ -24,8 +23,6 @@ void routeHSL(OSCMessage &msg, int addrOffset);
 void routeColor(OSCMessage &msg, int addrOffset);
 void updateRgbSlider(HslColor color);
 void sendOSC(OSCMessage &msgOUT);
-extern bool animationOn;
-extern uint8_t gCurrentAnimationNumber;
 
 int resolution = 4; //default resolution for encoders
 
@@ -74,21 +71,6 @@ void loopWiFi() {
         msgIN.route("/HSV", routeHSL);
         msgIN.route("/colour", routeColor);
 //        Serial.print("hmmm");
-        if (msgIN.fullMatch("/fx1"))
-        {
-          animationOn = true; 
-          gCurrentAnimationNumber = 0;
-        }
-        if (msgIN.fullMatch("/fx2"))
-        {
-          animationOn = true; 
-          gCurrentAnimationNumber = 1;
-        }
-        if (msgIN.fullMatch("/fx4"))
-        {
-          animationOn = false; 
-        }
-        
         if (msgIN.fullMatch("/resolution")) 
         {
           int resolution = int(msgIN.getFloat(0)*49.0) + 1;    // resolution from 1-50
@@ -123,20 +105,17 @@ void routeHSL(OSCMessage &msg, int addrOffset)
       hue %= 1000;       //keep within 1000 if we wrap around
       if (hue < 0) {hue = 1000 + hue;}
       currentColor.H = float(hue) / 1000;
-      
       //update labels - to be moved to centralised section
       OSCMessage msgOUT("/labels/hue");
-      msgOUT.add(currentColor.H * 255.0); 
+      msgOUT.add(currentColor.L * 512.0); 
       sendOSC(msgOUT);
       
    }
    else if (msg.fullMatch("/saturation", addrOffset))
    {
       currentColor.S = msg.getFloat(0);
-      
-      OSCMessage msgOUT("/labels/saturation");
-      msgOUT.add(currentColor.S * 255.0); 
-      sendOSC(msgOUT);
+//      Serial.print("Msg is :");
+//      Serial.print(msg.getFloat(0));
    }
    setHSL(currentColor);
    updateRgbSlider(currentColor);
