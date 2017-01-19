@@ -11,11 +11,12 @@
 
 #include "led.h"
 
-const char* ssid     = "The House of Benjamin";
-const char* password = "bellasatonthemat";
-unsigned int localPort = 10000;   
+const char* ssid     = "*************";
+const char* password = "************";
+
+unsigned int localPort = 10000;      // local port to listen for UDP packets
 unsigned int outPort = 12000;
-IPAddress outIP(192, 168, 0, 100);   
+IPAddress outIP(192, 168, 0, 100);  //TouchOSC IP for visual feedback
 
 WiFiUDP udp;
 
